@@ -40,6 +40,15 @@ const isInstructor = (req, res, next) => {
   }
 }
 
+const isInstructorOrExpert = (req, res, next) => {
+  if (req.user && (req.user.role === 'instructor' || req.user.role === 'expert')) {
+    next()
+  } else {
+    res.status(401)
+    throw new Error('Not authorized as an instructor')
+  }
+}
+
 const isStudent = (req, res, next) => {
   if (req.user && req.user.role === 'student') {
     next()
@@ -65,4 +74,4 @@ const hasCreatedCourse = asyncHandler(async (req, res, next) => {
 });
 
 
-export { authenticated, isInstructor, isStudent, hasCreatedCourse };
+export { authenticated, isInstructor, isInstructorOrExpert, isStudent, hasCreatedCourse };

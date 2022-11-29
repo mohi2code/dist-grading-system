@@ -3,8 +3,8 @@ import Course from '../models/course.js';
 import User from "../models/user.js";
 
 const getCourses = asyncHandler(async (req, res) => {
-  const courses = await Course.find();
-  res.json(courses);
+  const courses = await Course.find({ ...req.query });
+  res.json([...courses]);
 });
 
 const getCourseById = asyncHandler(async (req, res) => {
@@ -23,10 +23,11 @@ const createCourse = asyncHandler(async (req, res) => {
     name,
     instructor,
     passing_grade,
-    number_of_homeworks
+    number_of_homeworks,
+    experts: [req.user.id]
   });
 
-  res.json({ created: _created });
+  res.json(_created);
 })
 
 const addStudent = asyncHandler(async (req, res) => {
@@ -40,26 +41,10 @@ const addStudent = asyncHandler(async (req, res) => {
 })
 
 const addExpert = asyncHandler(async (req, res) => {
-  const { expert } = req.body;
-  const _expert = await User.findById(expert);
-
-  if (!_expert) {
-    res.status(400);
-    throw new Error('No such user!');
-  }
-
-  if(_expert.role == 'student') {
-    res.status(400);
-    throw new Error('You cannot assign a student as an expert!');
-  }
-
-  let _newExperts = req.course.experts.filter(e => !(expert == e))
-
-  let updated = await Course.findOneAndUpdate({ id: req.course.id }, {
-    experts: [expert, _newExperts]
-  })
-
-  res.json({updated});
+  const { experts } = req.body;
+  let updated = await Course.findOneAndUpdate({ id: req.course.id }, {experts})
+  console.log(updated);
+  res.json(updated);
 })
 
 export { 

@@ -1,8 +1,8 @@
-import express from "express";
+import express from 'express';
 const router = express.Router();
-import { login, register } from '../controllers/userController.js'
+import { getUsers } from '../controllers/userController.js';
+import { authenticated, isInstructorOrExpert } from '../middleware/rbac.js';
 
-router.route('/login').post(login);
-router.route('/register').post(register);
+router.route('/').get(authenticated, isInstructorOrExpert, getUsers);
 
 export default router;

@@ -13,6 +13,6 @@ router.route('/').get(authenticated, getCourses);
 router.route('/:id').get(authenticated, getCourseById);
 router.route('/').post(authenticated, isInstructor, createCourse);
 router.route('/:id/students').put(authenticated, isStudent, addStudent);
-router.route('/:id/experts').post(authenticated, hasCreatedCourse, addExpert);
+router.route('/:id/experts').put(authenticated, hasCreatedCourse, addExpert);
 
 export default router;

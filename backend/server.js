@@ -4,7 +4,8 @@ import dotenv from 'dotenv'
 import morgan from "morgan";
 import colors from 'colors';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
-import userRoutes from './routes/userRoutes.js';
+import userRoutes from './routes/userRoutes.js'
+import authRoutes from './routes/authRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
 import homeworkRoutes from './routes/homeworkRoutes.js'
 import submissionRoutes from './routes/submissionRoutes.js';
@@ -22,7 +23,8 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.json());
 
-app.use('/auth', userRoutes);
+app.use('/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/homeworks', homeworkRoutes);
 app.use('/api/submissions', submissionRoutes);
