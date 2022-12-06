@@ -18,6 +18,8 @@ export default function Dashboard() {
     if (!user)
       navigate('/auth')
 
+    navigate('/courses/all')
+
   }, [user])
 
   const onSideMenuSelect = ({ key }) => {
