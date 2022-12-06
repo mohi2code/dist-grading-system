@@ -12,15 +12,14 @@
 
   [x] Instructor can create a course.
   [x] Expert can update course info.
-  [ ] Expert can create homework for a course.
-  [ ] Expert can view all homework sumbissions, sumbissions gradings and objected gradings.
-  [ ] Expert can update a submission grading.
+  [x] Expert can view all homework sumbissions, sumbissions gradings and objected gradings.
+  [x] Expert can update a submission grading.
 
   [x] Student can enroll in a course.
   [x] Student can view all homeworks for a specific course
   [x] Student can submit a submission for a homework.
-  [ ] Student can update his submission for a specific homework.
-  [ ] Student can object on his grade for a specific homework submission.
+  [x] Student can update his submission for a specific homework.
+  [x] Student can object on his grade for a specific homework submission.
 
 ## TODO
 
