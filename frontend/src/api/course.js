@@ -85,6 +85,90 @@ export const useFetchCourseByInstructor = () => {
   };
 }
 
+export const fetchCoursesByExperts = async (id, options) => {
+  const response = await fetch(`/api/courses?experts=${id}`, {
+    ...options,
+  });
+  const isJson = response.headers.get('content-type')?.includes('application/json');
+  const data = isJson ? await response.json() : null;
+
+  if (!response.ok) {
+    const error = (data && data.message) || response.status;
+    throw error;
+  }
+
+  return data;
+}
+
+export const useFetchCourseByExperts = () => {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const execute = async (id, token) => {
+    try {
+        setIsLoading(true)
+        const courses = await fetchCoursesByExperts(id, {...makeAuthorizationHeader(token)});
+        setData(courses);
+        setIsLoading(false)
+        return courses;
+    } catch (error) {
+        setIsLoading(false)
+        setError(error)
+        throw error
+    }
+  }
+
+  return {
+    data,
+    error,
+    isLoading,
+    execute: useCallback(execute, [])
+  };
+}
+
+export const fetchCoursesByStudents = async (id, options) => {
+  const response = await fetch(`/api/courses?students=${id}`, {
+    ...options,
+  });
+  const isJson = response.headers.get('content-type')?.includes('application/json');
+  const data = isJson ? await response.json() : null;
+
+  if (!response.ok) {
+    const error = (data && data.message) || response.status;
+    throw error;
+  }
+
+  return data;
+}
+
+export const useFetchCourseByStudents = () => {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const execute = async (id, token) => {
+    try {
+        setIsLoading(true)
+        const courses = await fetchCoursesByStudents(id, {...makeAuthorizationHeader(token)});
+        setData(courses);
+        setIsLoading(false)
+        return courses;
+    } catch (error) {
+        setIsLoading(false)
+        setError(error)
+        throw error
+    }
+  }
+
+  return {
+    data,
+    error,
+    isLoading,
+    execute: useCallback(execute, [])
+  };
+}
+
 export const fetchCourseById = async (id, options) => {
   const response = await fetch(`/api/courses/${id}`, {
     ...options,
@@ -176,6 +260,55 @@ export const useCreateCourse = () => {
   }
 }
 
+export const updateCourse = async (id, reqBody, options) => {
+  const response = await fetch(`/api/courses/${id}`, {
+    body: JSON.stringify(reqBody),
+    ...options
+  });
+  const isJson = response.headers.get('content-type')?.includes('application/json');
+  const data = isJson ? await response.json() : null;
+
+  if (!response.ok) {
+    const error = (data && data.message) || response.status;
+    throw error;
+  }
+
+  return data;
+}
+
+export const useUpdateCourse = () => {
+  const [data, setData] = useState(null)
+  const [error, setError] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const execute = async (id, token, reqBody, options = { 
+      method: 'PUT', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }, 
+  }) => {
+      try {
+          setIsLoading(true)
+          const course = await updateCourse(id, reqBody, options)
+          setData(course)
+          setIsLoading(false)
+          return course
+      } catch (error) {
+          setIsLoading(false)
+          setError(error)
+          throw error
+      }
+  }
+
+  return {
+      data,
+      error, 
+      isLoading,
+      execute: useCallback(execute, [])
+  }
+}
+
 export const updateExperts = async (id, reqBody, options) => {
   const response = await fetch(`/api/courses/${id}/experts`, {
     body: JSON.stringify(reqBody),
@@ -225,3 +358,50 @@ export const useUpdateExperts = () => {
   }
 }
 
+export const enroll = async (id, options) => {
+  const response = await fetch(`/api/courses/${id}/students`, {
+    ...options
+  });
+  const isJson = response.headers.get('content-type')?.includes('application/json');
+  const data = isJson ? await response.json() : null;
+
+  if (!response.ok) {
+    const error = (data && data.message) || response.status;
+    throw error;
+  }
+
+  return data;
+}
+
+export const useEnroll= () => {
+  const [data, setData] = useState(null)
+  const [error, setError] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const execute = async (id, token, options = { 
+      method: 'PUT', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }, 
+  }) => {
+      try {
+          setIsLoading(true)
+          const course = await enroll(id, options)
+          setData(course)
+          setIsLoading(false)
+          return course
+      } catch (error) {
+          setIsLoading(false)
+          setError(error)
+          throw error
+      }
+  }
+
+  return {
+      data,
+      error, 
+      isLoading,
+      execute: useCallback(execute, [])
+  }
+}

@@ -7,18 +7,18 @@
 - An expert is someone who assists in the process of homework grading.
 - A submission is a student solution to a homework.
 
-  [ ] User can login.
-  [ ] Student can register.
+  [x] User can login.
+  [x] Student can register.
 
-  [ ] Instructor can create a course.
-  [ ] Expert can update course info.
+  [x] Instructor can create a course.
+  [x] Expert can update course info.
   [ ] Expert can create homework for a course.
   [ ] Expert can view all homework sumbissions, sumbissions gradings and objected gradings.
   [ ] Expert can update a submission grading.
 
-  [ ] Student can enroll in a course.
-  [ ] Student can view all homeworks for a specific course
-  [ ] Student can submit a submission for a homework.
+  [x] Student can enroll in a course.
+  [x] Student can view all homeworks for a specific course
+  [x] Student can submit a submission for a homework.
   [ ] Student can update his submission for a specific homework.
   [ ] Student can object on his grade for a specific homework submission.
 
@@ -47,7 +47,18 @@ _[x] Update submission grade
 \_[x] Object grade.
 [x] Submission objection.
 
-[ ] Setup react.js
-[ ] login & register screens.
-[ ] Instructor & Expert dashboard.
-[ ] Student Dashboard.
+[x] Setup react.js.
+[x] Login & register screens.
+[x] list all courses.
+[x] new course form.
+[x] update experts for a course.
+
+29/11/2022
+
+## New Todos
+
+[x] Expert dashboard and course listing.
+
+- Instructor creates a course, and enters name, passing grade and number of homeworks.
+- Homeworks are created automatically accordingly to 'number of homeworks'.
+- Homeworks points are distributed equally.

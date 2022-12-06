@@ -18,7 +18,7 @@ export default function LoginForm() {
     try {
       messageApi.loading('Processing...');
       const data = await login.execute(values);
-      messageApi.success('Login successful!').then(() => navigate('/'));
+      messageApi.success('Login successful!', 1).then(() => navigate('/'));
       dispatch({ type: 'save-data', user: data });
     } catch (error) {
       messageApi.error(error);

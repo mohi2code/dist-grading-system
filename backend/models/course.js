@@ -2,10 +2,6 @@ import mongoose from "mongoose";
 import User from './user.js'
 const { Schema } = mongoose;
 
-const homeworkSchema = new Schema({
-
-})
-
 const courseSchema = new Schema({
   name: { type: String, required: true },
   instructor: { type: mongoose.Types.ObjectId, ref: User },

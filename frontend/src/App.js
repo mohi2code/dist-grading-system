@@ -11,6 +11,10 @@ import Profile from "./routes/profile";
 import CourseSuccess from "./routes/course/courseSuccess";
 import ViewCourse from "./routes/course/viewCourse";
 import EditCourse from "./routes/course/editCourse";
+import AllHomeworks from "./routes/homework/allHomeworks";
+import ViewAndEditHomework from "./routes/homework/viewAndEditHomework";
+import NewSubmission from "./routes/submissions/newSubmission";
+import ViewSubmission from "./routes/submissions/viewSubmission";
 
 function App() {
 
@@ -48,6 +52,34 @@ function App() {
                   element: <EditCourse />
                 }
               ]
+            }
+          ]
+        },
+
+        {
+          path: 'homeworks',
+          children: [
+            {
+              path: 'all',
+              element: <AllHomeworks />
+            },
+            {
+              path: ':homeworkId',
+              element: <ViewAndEditHomework />
+            },
+          ]
+        },
+
+        {
+          path: 'submissions', 
+          children: [
+            {
+              path: ':submissionId',
+              element: <ViewSubmission />
+            },
+            {
+              path: 'new',
+              element: <NewSubmission />
             }
           ]
         },

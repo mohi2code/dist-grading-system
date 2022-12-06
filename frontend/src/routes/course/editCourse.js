@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
-import { Breadcrumb, Space, Row, Col, Tabs, Form, Select, Button, message } from "antd";
-import { HomeOutlined } from "@ant-design/icons";
 import { useFetchUsersByRole } from "../../api/user";
-import { useFetchCourseById, useUpdateExperts } from "../../api/course";
+import { useFetchCourseById, useUpdateCourse, useUpdateExperts } from "../../api/course";
+import { Breadcrumb, Space, Row, Col, Tabs, Form, Select, Button, message, Input } from "antd";
+import { HomeOutlined } from "@ant-design/icons";
 
 export default function EditCourse() {
 
@@ -12,17 +12,35 @@ export default function EditCourse() {
   const { courseId } = useParams();
   const { user } = useContext(UserContext);
   const fetchCourse = useFetchCourseById();
-  const fetchUsers = useFetchUsersByRole();
+  const updateCourse = useUpdateCourse();
+  const fetchExperts = useFetchUsersByRole();
   const updateExperts = useUpdateExperts();
 
   const [messageApi, contextHolder] = message.useMessage();
-  const [expertsForm] = Form.useForm()
+  const [expertsForm] = Form.useForm();
+  const [infoForm] = Form.useForm();
   const [course, setCourse] = useState(null);
   const [users, setUsers] = useState(null);
 
+  const onFinishInfo = async (values) => {
+    console.log(values);
+    try {
+      messageApi.loading('Processing...');
+      const data = await updateCourse.execute(
+        courseId, user.token, values
+      );
+      messageApi.success('Course experts were updated successfully!', 1)
+        .then(() => navigate(`/courses/edit/${data._id}`));
+    } catch (error) {
+      console.log(error);
+      messageApi.error(error)
+    }
+  }
+
+  const populateInfoForm = (values) => infoForm.setFieldsValue(values);
+
   const onFinishExperts = async (values) => {
     let _experts = values.experts.map(e => e)
-    console.log(_experts);
     try {
       messageApi.loading('Processing...');
       const data = await updateExperts.execute(
@@ -41,11 +59,10 @@ export default function EditCourse() {
     const fetchData = async () => {
       try {
         const _course = await fetchCourse.execute(courseId, user.token);
-        const _users = await fetchUsers.execute('expert', user.token)
+        const _users = await fetchExperts.execute('expert', user.token)
         setCourse(_course);
         setUsers(_users);
-        console.log(_course);
-        console.log(_users)
+        populateInfoForm(_course);
       } catch (error) {
         console.log(error);
       }
@@ -86,7 +103,11 @@ export default function EditCourse() {
               {
                 label: 'Basic info',
                 key: 'basic-info',
-                children: <h1>Todo...</h1>
+                children: BasicInfoForm({
+                  userRole: user && user.role,
+                  form: infoForm,
+                  onFinish: onFinishInfo
+                })
               },
               {
                 label: 'Experts',
@@ -121,6 +142,56 @@ export default function EditCourse() {
   )
 }
 
+const BasicInfoForm = ({userRole, form, onFinish }) => (
+  <Form
+    form={form}
+    onFinish={onFinish}
+    layout='vertical'
+    style={{width: '100%'}}
+  >
+    <Form.Item
+      name='name'
+      rules={[{ required: true, message: 'Course name cannot be empty' }]}
+      label='Course Name'
+    >
+      <Input disabled={userRole && userRole !== 'instructor'} />
+    </Form.Item>
+
+    <Row>
+      <Col span={11}>
+        <Form.Item
+          name='passing_grade'
+          label='Passing grade'
+          rules={[{ required: true, message: 'passing grade is required' }]}
+        >
+          <Input 
+            type="number" min={0} max={100}
+            disabled
+          />
+        </Form.Item>
+      </Col>
+      <Col span={11} offset={1}>
+        <Form.Item
+          name='number_of_homeworks'
+          label='Number of homeworks'
+          rules={[{ required: true, message: 'specify number of homeworks' }]}
+        >
+          <Input disabled type="number" min={0} max={10} />
+        </Form.Item>
+      </Col>
+    </Row>
+
+    <Form.Item>
+      <Button
+        type='primary'
+        htmlType='submit'
+      >
+        save
+      </Button>
+    </Form.Item>
+  </Form>
+)
+
 const ExpertsForm = ({ form, onFinish, initial, options }) => (
   <Form
     form={form}
@@ -145,7 +216,7 @@ const ExpertsForm = ({ form, onFinish, initial, options }) => (
         type='primary'
         htmlType='submit'
       >
-        Save
+        save
       </Button>
     </Form.Item>
   </Form>

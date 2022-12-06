@@ -29,6 +29,14 @@ export default function Dashboard() {
       case 'create-course':
         navigate('/courses/new');
         break;
+
+      case 'all-homeworks':
+        navigate('/homeworks/all');
+        break;
+
+      case 'create-homework':
+        // navigate('/homeworks/new');
+        break;
     
       default:
         break;
@@ -44,7 +52,7 @@ export default function Dashboard() {
       case 'logout':
         dispatch({ type: 'destroy-data' })
         messageApi.loading('Logging out...', 1)
-          .then(() => messageApi.success('Logged out'))
+          .then(() => messageApi.success('Logged out', 1))
           .then(() => navigate('/auth'));
         break;
     
@@ -68,7 +76,7 @@ export default function Dashboard() {
         <Menu 
           theme='dark'
           mode='inline'
-          items={makeMenuItems(user.role)}
+          items={makeMenuItems({role: user && user.role})}
           onSelect={onSideMenuSelect}
         />
       </Sider>
@@ -117,7 +125,7 @@ function getItem(label, key, icon, children, type) {
   };
 }
 
-const makeMenuItems = (role) => [
+const makeMenuItems = ({role}) => [
   getItem('Courses', 'courses', null, [
     getItem('All courses', 'all-courses'),
     role === 'instructor' && getItem('Create course', 'create-course', <PlusOutlined />)
@@ -125,6 +133,5 @@ const makeMenuItems = (role) => [
   getItem('Homeworks', 'homeworks', null, [
     getItem('All homeworks', 'all-homeworks'),
     role !== 'student' && getItem('Create homework', 'create-homework', <PlusOutlined />)
-  ]),
-  getItem('Submissions')
+  ])
 ]

@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-import { Submission } from '../models/homework.js';
+import { Submission, SubmissionGroup } from '../models/homework.js';
 
 const submitHomework = asyncHandler(async (req, res) => {
   const { 
@@ -19,11 +19,12 @@ const submitHomework = asyncHandler(async (req, res) => {
 
 const editGrade = asyncHandler(async (req, res) => {
   const { grade } = req.body;
-  const edited_by = req.user.id;
+  const graded_by = req.user.id;
 
   const _edited = await Submission.findByIdAndUpdate(req.params.id, {
     grade,
-    edited_by
+    graded_by,
+    objected: false
   }).populate(['submitted_by', 'homework_id']);
 
   res.json(_edited);
@@ -50,19 +51,24 @@ const objectGrade = asyncHandler(async (req, res) => {
 
 const getSubmission = asyncHandler(async (req, res) => {
   const _submission = await Submission.findById(req.params.id)
-    .populate(['submitted_by', 'edited_by']);
+    .populate('homework_id')
+    .populate('submitted_by', '-hashed_password')
+    .populate('graded_by', '-hashed_password');
   res.json(_submission);
 });
 
 const getAllSubmission = asyncHandler(async (req, res) => {
-  const _submissions = await Submission.find(req.query);
+  const _submissions = await Submission.find(req.query)
+    .populate('submitted_by', '-hashed_password')
+    .populate('graded_by', '-hashed_password');
   res.json([..._submissions]);
 });
+
 
 export {
   submitHomework,
   editGrade,
   objectGrade,
   getSubmission,
-  getAllSubmission
+  getAllSubmission,
 };

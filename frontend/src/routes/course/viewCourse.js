@@ -18,7 +18,6 @@ export default function ViewCourse() {
     const fetchData = async() => {
       try {
         const data = await fetchCourse.execute(courseId, user.token);
-        console.log(data);
         setCourse(data);
       } catch (error) {
         console.log(error);
