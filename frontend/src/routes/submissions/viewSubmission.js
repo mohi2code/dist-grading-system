@@ -161,7 +161,7 @@ export default function ViewSubmission() {
               </Descriptions.Item>
             </Descriptions>
 
-            { submission && submission.graded_by.role === 'student' ?
+            { submission && submission.graded_by && submission.graded_by.role === 'student' ?
               <Form
                 form={graderForm}
                 onFinish={onFinishGrader}

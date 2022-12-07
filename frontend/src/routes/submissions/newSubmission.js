@@ -153,7 +153,7 @@ const SubmitForm = ({ user, homework, setCanGrade }) => {
             </Descriptions.Item>
             <Descriptions.Item label="Grade" >
               {submission && (
-                submission.grade ? 
+                submission.grade || submission.grade === 0 ? 
                   <Space size="large">
                     {submission.grade}
                     <Button 
@@ -259,7 +259,7 @@ const GradeForm = ({ user, homework }) => {
         </Descriptions.Item>
       </Descriptions>
 
-      { submitter && submitter.role === 'studnet' ? 
+      { submitter && submitter.role === 'student' ? 
         <Form
           form={form}
           layout="vertical"
@@ -289,7 +289,13 @@ const GradeForm = ({ user, homework }) => {
           </Form.Item>
         </Form>
         :
-        <Tag color="warning">The grading will be handled by an expert</Tag>
+        (
+          submitter && (submitter.role === 'expert' || submitter.role === 'instructor')
+          ? 
+          <Tag color="warning">The grading will be handled by an expert</Tag>
+          :
+          <Tag color="default">No answer was submitted yet!</Tag>
+        )
       }
     </Space>
   );
